@@ -6,35 +6,40 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _HomeScreenState();
-  }
+  State<StatefulWidget> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF6A5ACD),
-          foregroundColor: Colors.white,
-        ),
-        body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF6A5ACD),
-                Color(0xFF00CED1),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'Calculator',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-          child: Stack(children: [
-            _screenContent(),
-          ]),
         ),
-        drawer: const SideDrawer());
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.black,
+              Color(0xFF333333),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: _screenContent(),
+      ),
+      drawer: const SideDrawer(),
+    );
   }
 
   Widget _screenContent() {
@@ -45,7 +50,19 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              color: Colors.black,
+              decoration: BoxDecoration(
+                color: const Color(0xFF333333),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(20),
               height: 250,
               width: 250,
               alignment: Alignment.center,
@@ -54,39 +71,57 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 200,
                 height: 400,
                 fit: BoxFit.contain,
-                colorBlendMode: BlendMode.darken,
+                colorBlendMode: BlendMode.luminosity,
               ),
             ),
+            const SizedBox(height: 40),
             const Text(
-              "Welcome to the calculator app",
+              "Professional\nCalculator",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
                 fontFamily: "cairo",
+                height: 1.2,
               ),
             ),
-            const SizedBox(height: 25.0),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to CalculatorScreen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const CalculatorScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                backgroundColor: Colors.black,
-                padding: const EdgeInsets.all(24.0), // Adjust size here
+            const SizedBox(height: 40),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.orange.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-              child: const Text(
-                "Start",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CalculatorApp(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  backgroundColor: Colors.orange,
+                  padding: const EdgeInsets.all(30),
+                  elevation: 10,
+                ),
+                child: const Text(
+                  "START",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
                 ),
               ),
             ),
