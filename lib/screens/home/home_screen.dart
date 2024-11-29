@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 40),
             const Text(
-              "Professional\nCalculator",
+              "Calculator",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
