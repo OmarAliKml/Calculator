@@ -1,187 +1,229 @@
 import 'package:flutter/material.dart';
 
-class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({super.key});
-
+class CalculatorApp extends StatelessWidget {
   @override
-  _CalculatorScreenState createState() => _CalculatorScreenState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Professional Calculator',
+      theme: ThemeData.dark().copyWith(
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
+      ),
+      home: CalculatorHome(),
+    );
+  }
 }
 
-class _CalculatorScreenState extends State<CalculatorScreen> {
-  String input = '';
-  String result = '';
+class CalculatorHome extends StatefulWidget {
+  @override
+  _CalculatorHomeState createState() => _CalculatorHomeState();
+}
 
-  void buttonPressed(String buttonText) {
+class _CalculatorHomeState extends State<CalculatorHome> {
+  String _output = "0";
+  String _currentNumber = "";
+  String _operation = "";
+  double _num1 = 0;
+  double _num2 = 0;
+  bool _shouldClearCurrent = false;
+
+  void _buttonPressed(String buttonText) {
     setState(() {
-      if (buttonText == 'C') {
-        input = '';
-        result = '';
-      } else if (buttonText == '=') {
-        try {
-          double calcResult = _calculate(input);
-          result = calcResult % 1 == 0
-              ? calcResult.toInt().toString()
-              : calcResult.toString();
-        } catch (e) {
-          result = 'Error';
-          input = '';
+      if (buttonText == "C") {
+        _output = "0";
+        _currentNumber = "";
+        _operation = "";
+        _num1 = 0;
+        _num2 = 0;
+      } else if (buttonText == "+" ||
+          buttonText == "-" ||
+          buttonText == "×" ||
+          buttonText == "÷") {
+        if (_currentNumber.isNotEmpty) {
+          _num1 = double.parse(_currentNumber);
+          _operation = buttonText;
+          _currentNumber = "";
+        }
+      } else if (buttonText == "=") {
+        if (_currentNumber.isNotEmpty && _operation.isNotEmpty) {
+          _num2 = double.parse(_currentNumber);
+          switch (_operation) {
+            case "+":
+              _currentNumber = (_num1 + _num2).toString();
+              break;
+            case "-":
+              _currentNumber = (_num1 - _num2).toString();
+              break;
+            case "×":
+              _currentNumber = (_num1 * _num2).toString();
+              break;
+            case "÷":
+              _currentNumber = (_num1 / _num2).toString();
+              break;
+          }
+          _operation = "";
+          _num1 = double.parse(_currentNumber);
+          _shouldClearCurrent = true;
+        }
+      } else if (buttonText == "±") {
+        if (_currentNumber.isNotEmpty) {
+          if (_currentNumber.startsWith("-")) {
+            _currentNumber = _currentNumber.substring(1);
+          } else {
+            _currentNumber = "-" + _currentNumber;
+          }
+        }
+      } else if (buttonText == "%") {
+        if (_currentNumber.isNotEmpty) {
+          double number = double.parse(_currentNumber);
+          _currentNumber = (number / 100).toString();
+        }
+      } else if (buttonText == ".") {
+        if (!_currentNumber.contains(".")) {
+          _currentNumber = _currentNumber + buttonText;
         }
       } else {
-        input += buttonText;
+        if (_shouldClearCurrent) {
+          _currentNumber = buttonText;
+          _shouldClearCurrent = false;
+        } else {
+          _currentNumber = _currentNumber + buttonText;
+        }
+      }
+
+      if (_currentNumber.isEmpty) {
+        _output = "0";
+      } else {
+        _output = _currentNumber;
       }
     });
   }
 
-  double _calculate(String input) {
-    List<String> tokens = _tokenize(input);
-    double total = double.parse(tokens[0]);
-
-    for (int i = 1; i < tokens.length; i += 2) {
-      String operator = tokens[i];
-      double operand = double.parse(tokens[i + 1]);
-
-      switch (operator) {
-        case '+':
-          total += operand;
-          break;
-        case '-':
-          total -= operand;
-          break;
-        case '*':
-          total *= operand;
-          break;
-        case '/':
-          if (operand != 0) {
-            total /= operand;
-          } else {
-            throw Exception("Division by zero");
-          }
-          break;
-      }
-    }
-    return total;
-  }
-
-  List<String> _tokenize(String input) {
-    List<String> tokens = [];
-    String number = '';
-
-    for (int i = 0; i < input.length; i++) {
-      String character = input[i];
-      if ('0123456789.'.contains(character)) {
-        number += character;
-      } else {
-        if (number.isNotEmpty) {
-          tokens.add(number);
-          number = '';
-        }
-        tokens.add(character);
-      }
-    }
-    if (number.isNotEmpty) {
-      tokens.add(number);
-    }
-    return tokens;
+  Widget _buildButton(String buttonText, {Color? color}) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.all(2),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: color ?? Color(0xFF333333),
+            padding: EdgeInsets.all(24),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          child: Text(
+            buttonText,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          onPressed: () => _buttonPressed(buttonText),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        foregroundColor: Colors.white,
-        title: const Text(
-          'Calculator',
-          style: TextStyle(
-              fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF6A5ACD),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF6A5ACD),
-              Color(0xFF00CED1),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        padding: const EdgeInsets.all(16.0),
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Container(
-              alignment: Alignment.centerRight,
-              child: Text(
-                input,
-                style: const TextStyle(fontSize: 60, color: Colors.white),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Container(
-              alignment: Alignment.centerRight,
-              child: Text(
-                result,
-                style: const TextStyle(
-                    fontSize: 50,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-            const SizedBox(height: 20),
             Expanded(
-              child: Center(
+              flex: 2,
+              child: Container(
+                padding: EdgeInsets.all(16),
+                alignment: Alignment.bottomRight,
+                child: Text(
+                  _output,
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 4,
+              child: Container(
+                padding: EdgeInsets.all(8),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildButton('7', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('8', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('9', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('/', Colors.black),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          _buildButton("C", color: Colors.grey),
+                          _buildButton("±", color: Colors.grey),
+                          _buildButton("%", color: Colors.grey),
+                          _buildButton("÷", color: Colors.orange),
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildButton('4', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('5', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('6', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('*', Colors.black),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          _buildButton("7"),
+                          _buildButton("8"),
+                          _buildButton("9"),
+                          _buildButton("×", color: Colors.orange),
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildButton('1', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('2', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('3', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('-', Colors.black),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          _buildButton("4"),
+                          _buildButton("5"),
+                          _buildButton("6"),
+                          _buildButton("-", color: Colors.orange),
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildButton('0', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('C', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('=', Colors.black),
-                        const SizedBox(width: 10),
-                        _buildButton('+', Colors.black),
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          _buildButton("1"),
+                          _buildButton("2"),
+                          _buildButton("3"),
+                          _buildButton("+", color: Colors.orange),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          _buildButton("0", color: Color(0xFF333333)),
+                          _buildButton("."),
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              margin: EdgeInsets.all(2),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  padding: EdgeInsets.all(24),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                ),
+                                child: Text(
+                                  "=",
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onPressed: () => _buttonPressed("="),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -190,24 +232,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildButton(String buttonText, Color buttonColor) {
-    return ElevatedButton(
-      onPressed: () => buttonPressed(buttonText),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        backgroundColor: buttonColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      child: Text(buttonText,
-          style: const TextStyle(
-            fontSize: 24,
-            color: Colors.white,
-          )),
     );
   }
 }
