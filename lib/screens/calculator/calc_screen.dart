@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
 
 class CalculatorApp extends StatelessWidget {
+  const CalculatorApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Professional Calculator',
-      theme: ThemeData.dark().copyWith(
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.black,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.orange,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Calculator',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-      home: CalculatorHome(),
+      body: const CalculatorHome(),
     );
   }
 }
 
 class CalculatorHome extends StatefulWidget {
+  const CalculatorHome({super.key});
+
   @override
   _CalculatorHomeState createState() => _CalculatorHomeState();
 }
@@ -27,6 +44,16 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   double _num1 = 0;
   double _num2 = 0;
   bool _shouldClearCurrent = false;
+
+  // Format number to remove .0 if it's a whole number
+  String _formatNumber(String number) {
+    if (number.contains('.')) {
+      // Remove trailing zeros after decimal point
+      String cleanNumber = number.replaceAll(RegExp(r"\.?0*$"), "");
+      return cleanNumber;
+    }
+    return number;
+  }
 
   void _buttonPressed(String buttonText) {
     setState(() {
@@ -50,16 +77,16 @@ class _CalculatorHomeState extends State<CalculatorHome> {
           _num2 = double.parse(_currentNumber);
           switch (_operation) {
             case "+":
-              _currentNumber = (_num1 + _num2).toString();
+              _currentNumber = _formatNumber((_num1 + _num2).toString());
               break;
             case "-":
-              _currentNumber = (_num1 - _num2).toString();
+              _currentNumber = _formatNumber((_num1 - _num2).toString());
               break;
             case "×":
-              _currentNumber = (_num1 * _num2).toString();
+              _currentNumber = _formatNumber((_num1 * _num2).toString());
               break;
             case "÷":
-              _currentNumber = (_num1 / _num2).toString();
+              _currentNumber = _formatNumber((_num1 / _num2).toString());
               break;
           }
           _operation = "";
@@ -71,13 +98,13 @@ class _CalculatorHomeState extends State<CalculatorHome> {
           if (_currentNumber.startsWith("-")) {
             _currentNumber = _currentNumber.substring(1);
           } else {
-            _currentNumber = "-" + _currentNumber;
+            _currentNumber = "-$_currentNumber";
           }
         }
       } else if (buttonText == "%") {
         if (_currentNumber.isNotEmpty) {
           double number = double.parse(_currentNumber);
-          _currentNumber = (number / 100).toString();
+          _currentNumber = _formatNumber((number / 100).toString());
         }
       } else if (buttonText == ".") {
         if (!_currentNumber.contains(".")) {
@@ -103,18 +130,18 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   Widget _buildButton(String buttonText, {Color? color}) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.all(2),
+        margin: const EdgeInsets.all(2),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: color ?? Color(0xFF333333),
-            padding: EdgeInsets.all(24),
+            backgroundColor: color ?? const Color(0xFF333333),
+            padding: const EdgeInsets.all(24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
             ),
           ),
           child: Text(
             buttonText,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -128,18 +155,19 @@ class _CalculatorHomeState extends State<CalculatorHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
+    return Container(
+      color: Colors.black,
+      child: SafeArea(
         child: Column(
           children: <Widget>[
             Expanded(
               flex: 2,
               child: Container(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 alignment: Alignment.bottomRight,
                 child: Text(
                   _output,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -150,7 +178,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
             Expanded(
               flex: 4,
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   children: <Widget>[
                     Expanded(
@@ -196,21 +224,21 @@ class _CalculatorHomeState extends State<CalculatorHome> {
                     Expanded(
                       child: Row(
                         children: <Widget>[
-                          _buildButton("0", color: Color(0xFF333333)),
+                          _buildButton("0", color: const Color(0xFF333333)),
                           _buildButton("."),
                           Expanded(
                             flex: 2,
                             child: Container(
-                              margin: EdgeInsets.all(2),
+                              margin: const EdgeInsets.all(2),
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
-                                  padding: EdgeInsets.all(24),
+                                  padding: const EdgeInsets.all(24),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                 ),
-                                child: Text(
+                                child: const Text(
                                   "=",
                                   style: TextStyle(
                                     fontSize: 24,
