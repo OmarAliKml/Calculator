@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:in_app_review/in_app_review.dart';
-import 'package:share_plus/share_plus.dart';
-
-import '../../shared/core/app_url.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -156,21 +151,6 @@ class _AboutScreenState extends State<AboutScreen>
       ],
     );
   }
-
-  void _share() {
-    Share.share(
-        "https://play.google.com/store/apps/details?id=com.idea.calculator");
-  }
-
-  void _rateApp(BuildContext context) {
-    final InAppReview inAppReview = InAppReview.instance;
-
-    inAppReview.openStoreListing(
-      appStoreId: 'com.idea.calculator',
-      microsoftStoreId: 'com.idea.calculator',
-    );
-  }
-
   Widget _buildActionButtons() {
     return Column(
       children: [
@@ -181,54 +161,11 @@ class _AboutScreenState extends State<AboutScreen>
                 icon: Icons.share_outlined,
                 label: 'Share',
                 onTap: () {
-                  _share();
                 }),
             _buildActionButton(
               icon: Icons.star_outline,
               label: 'Rate',
               onTap: () {
-                _rateApp(context);
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        _buildActionRow(
-          1,
-          [
-            _buildActionButton(
-              icon: Icons.apps_outlined,
-              label: 'Our Apps',
-              onTap: () {
-                AppUrl.launch(
-                    'https://play.google.com/store/apps/developer?id=IdeaS0ft&hl=en&gl=US');
-              },
-            ),
-            _buildActionButton(
-              icon: Icons.email_outlined,
-              label: 'suggestion',
-              onTap: () {
-                _sendEmail('');
-              },
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-        _buildActionRow(
-          2,
-          [
-            _buildActionButton(
-              icon: FontAwesomeIcons.twitter,
-              label: 'Twitter',
-              onTap: () {
-                AppUrl.launch('https://twitter.com/IdeaS0ft');
-              },
-            ),
-            _buildActionButton(
-              icon: Icons.facebook,
-              label: 'Facebook',
-              onTap: () {
-                AppUrl.launch('https://m.facebook.com/100083952761239/');
               },
             ),
           ],
@@ -289,14 +226,5 @@ class _AboutScreenState extends State<AboutScreen>
         ),
       ),
     );
-  }
-
-  void _sendEmail(String emailAddress) async {
-    final Uri emailLaunchUri = Uri(
-        scheme: 'mailto',
-        path: 'ideasoftwaretech@gmail.com',
-        queryParameters: {'subject': ''});
-
-    AppUrl.launchUri(emailLaunchUri);
   }
 }
