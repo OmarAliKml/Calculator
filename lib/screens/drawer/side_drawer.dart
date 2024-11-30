@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../about/about_screen.dart';
 import '../calculator/calc_screen.dart';
 import '../history/history_screen.dart';
 
@@ -82,17 +81,6 @@ class SideDrawer extends StatelessWidget {
                     },
                   ),
                   const Divider(color: Colors.grey),
-                  _buildMenuItem(
-                    icon: Icons.info,
-                    title: 'About',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CalculatorScreen()),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
