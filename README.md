@@ -14,3 +14,9 @@ A simple yet functional calculator app built with Flutter.
 ## Built With
 
 * [Flutter] - The framework used to build the app.
+
+[Demo here!](https://appetize.io/app/android/com.example.calc.calc?device=pixel7&osVersion=13.0)
+
+
+
+[Omar Ali](https://omaralikml.github.io/)
