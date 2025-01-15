@@ -208,8 +208,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     }
   }
 
-  Widget _buildButton(
-    String buttonText, {
+  Widget _buildButton(String buttonText, {
     Color? backgroundColor,
     Color? textColor,
     double flex = 1,
@@ -221,7 +220,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
         builder: (context, child) {
           return Transform.scale(
             scale:
-                _lastPressedButton == buttonText ? _buttonAnimation.value : 1.0,
+            _lastPressedButton == buttonText ? _buttonAnimation.value : 1.0,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: ElevatedButton(
@@ -289,10 +288,11 @@ class _CalculatorScreenState extends State<CalculatorScreen>
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HistoryScreen(
-                      history: _history,
-                      onClearHistory: _clearHistory,
-                    ),
+                    builder: (context) =>
+                        HistoryScreen(
+                          history: _history,
+                          onClearHistory: _clearHistory,
+                        ),
                   ),
                 );
                 if (result != null) {

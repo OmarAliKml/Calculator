@@ -28,39 +28,40 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void _handleClearHistory() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF333333),
-        title: const Text(
-          'Clear History',
-          style: TextStyle(color: Colors.white),
-        ),
-        content: const Text(
-          'Are you sure you want to clear all history?',
-          style: TextStyle(color: Colors.white),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.orange),
+      builder: (context) =>
+          AlertDialog(
+            backgroundColor: const Color(0xFF333333),
+            title: const Text(
+              'Clear History',
+              style: TextStyle(color: Colors.white),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              widget.onClearHistory();
-              setState(() {
-                _localHistory.clear();
-              });
-              Navigator.pop(context);
-            },
-            child: const Text(
-              'Clear',
-              style: TextStyle(color: Colors.orange),
+            content: const Text(
+              'Are you sure you want to clear all history?',
+              style: TextStyle(color: Colors.white),
             ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  widget.onClearHistory();
+                  setState(() {
+                    _localHistory.clear();
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Clear',
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -101,56 +102,57 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: _localHistory.isEmpty
           ? const Center(
-              child: Text(
-                'No history available',
-                style: TextStyle(
+        child: Text(
+          'No history available',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
+      )
+          : ListView.builder(
+        itemCount: _localHistory.length,
+        itemBuilder: (context, index) {
+          final historyItem =
+          _localHistory[_localHistory.length - 1 - index];
+          return Card(
+            color: const Color(0xFF333333),
+            margin: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+              vertical: 4.0,
+            ),
+            child: ListTile(
+              onTap: () {
+                Navigator.pop(context, historyItem.result);
+              },
+              title: Text(
+                '${historyItem.expression} = ${historyItem.result}',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                 ),
               ),
-            )
-          : ListView.builder(
-              itemCount: _localHistory.length,
-              itemBuilder: (context, index) {
-                final historyItem =
-                    _localHistory[_localHistory.length - 1 - index];
-                return Card(
-                  color: const Color(0xFF333333),
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 4.0,
-                  ),
-                  child: ListTile(
-                    onTap: () {
-                      Navigator.pop(context, historyItem.result);
-                    },
-                    title: Text(
-                      '${historyItem.expression} = ${historyItem.result}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    ),
-                    subtitle: Text(
-                      _formatDateTime(historyItem.timestamp),
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 14,
-                      ),
-                    ),
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.orange,
-                      size: 16,
-                    ),
-                  ),
-                );
-              },
+              subtitle: Text(
+                _formatDateTime(historyItem.timestamp),
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 14,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.orange,
+                size: 16,
+              ),
             ),
+          );
+        },
+      ),
     );
   }
 
   String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime
+        .hour}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }

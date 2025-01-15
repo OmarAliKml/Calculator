@@ -178,10 +178,11 @@ class _SideDrawerState extends State<SideDrawer>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => HistoryScreen(
-                      history: const [],
-                      onClearHistory: () {},
-                    ),
+                    builder: (context) =>
+                        HistoryScreen(
+                          history: const [],
+                          onClearHistory: () {},
+                        ),
                   ),
                 );
               },
@@ -234,7 +235,9 @@ class _SideDrawerState extends State<SideDrawer>
             const Divider(color: Colors.grey),
             const SizedBox(height: 8),
             Text(
-              '© ${DateTime.now().year} Calculator',
+              '© ${DateTime
+                  .now()
+                  .year} Calculator',
               style: TextStyle(
                 color: Colors.grey[400],
                 fontSize: 12,

@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       elevation: 0,
                     ).copyWith(
                       overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
+                            (Set<MaterialState> states) {
                           if (states.contains(MaterialState.pressed)) {
                             return Colors.deepOrange.withOpacity(0.3);
                           }
